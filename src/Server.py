@@ -116,6 +116,7 @@ def Main():
 
     while True:
         try:
+            print("length " + str(blockChain.length_chain()))
             if blockChain.length_chain() > args.max_length_chain:
                 print_lock.acquire()
                 print('Blockchain completed')
