@@ -47,7 +47,8 @@ def Main():
     # connect to server on local computer
     conn.connect((host, port))
 
-    conn.send("ACK".encode('ascii'))
+    ack = pack('>Q', "ACK")
+    conn.send(ack)
 
     while True:
         try:
@@ -60,6 +61,7 @@ def Main():
             print(len(msg))
             data = b''
             while len(data) < length:
+                print("receiving Chain")
                 # doing it in batches is generally better than trying
                 # to do it all in one go, so I believe.
                 to_read = length - len(data)
@@ -86,10 +88,11 @@ def Main():
             conn.sendall(data)
 
             # Wait for server to check block and add it to main blockchain
-            msg = conn.recv(1024)
+            msg = conn.recv(8)
             print("Check performed")
             # If the block was incorrect remove it and try again
-            if msg.endswith("ACK".encode('ascii')):
+            (status,) = unpack('>Q', msg)
+            if status is "OK":
                 print("DONE")
                 continue
             else:
