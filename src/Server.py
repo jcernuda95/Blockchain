@@ -103,12 +103,7 @@ def Main():
                 print('Disconnecting from :', addr[0], ':', addr[1])
                 print_lock.release()
                 c.close()
-            elif data is not "ACK":
-                print_lock.acquire()
-                print('Failed to establish a proper connection to :', addr[0], ':', addr[1])
-                print_lock.release()
-                c.close()
-            else:
+            if data.endswith("ACK".encode('ascii')):
                 connection_list_lock.acquire()
                 list_conections.append(c)
                 connection_list_lock.release()
@@ -116,6 +111,11 @@ def Main():
                 t = threading.Thread(target=threaded, args=(c, addr, blockChain, list_conections))
                 t.daemon = True
                 t.start()
+            else:
+                print_lock.acquire()
+                print('Failed to establish a proper connection to :', addr[0], ':', addr[1])
+                print_lock.release()
+                c.close()
         except (KeyboardInterrupt, socket.error) as e:
             print('Process ended')
             blockChain.save_chain('./')
