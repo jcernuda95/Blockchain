@@ -24,8 +24,9 @@ def threaded(conn, addr, blockchain, list_conections):
     while True:
         # Once connection is establish, send the full blockchain to the client
         blockchain_lock.acquire()
-        conn.send(len(blockchain))
-        conn.send(pickle.dumps(blockchain))
+        data = pickle.dumps(blockchain)
+        conn.send(len(data))
+        conn.send(data)
         blockchain_lock.release()
 
         # The client starts to mine, wait until it finishes
