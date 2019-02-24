@@ -54,6 +54,7 @@ def Main():
                 break
             # Receive up-to-date blockchain
             length = int(conn.recv(64))
+            print(length)
             data = b''
             while len(data) < length:
                 # doing it in batches is generally better than trying
@@ -73,7 +74,9 @@ def Main():
             t.join()
 
             # Send last block to the server
-            conn.send(pickle.dumps(blockchain.lookup_block_by_index(-1)))
+            data = pickle.dumps(blockchain.lookup_block_by_index(-1))
+            conn.send(str(len(data)).encode('ascii'))
+            conn.send(data)
 
             # Wait for server to check block and add it to main blockchain
             msg = conn.recv(1024)

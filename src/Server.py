@@ -30,7 +30,18 @@ def threaded(conn, addr, blockchain, list_conections):
         blockchain_lock.release()
 
         # The client starts to mine, wait until it finishes
+        length = int(conn.rec(1024))
+        print(length)
+        data = b''
+        while len(data) < length:
+            # doing it in batches is generally better than trying
+            # to do it all in one go, so I believe.
+            to_read = length - len(data)
+            data += conn.recv(
+                4096 if to_read > 4096 else to_read)
+        blockchain: BlockChain = pickle.loads(data)
         block = pickle.loads(conn.recv(4096))
+
         if not block:
             break
 
