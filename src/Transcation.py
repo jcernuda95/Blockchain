@@ -14,9 +14,9 @@ class Block:
         self.hash= self.mine()
 
     def calculate_hash(self):
-        return hashlib.sha224(str(self.index) + str(self.timestamp) +
+        return hashlib.sha224((str(self.index) + str(self.timestamp) +
                                           str(self.data) + str(self.previous_hash) +
-                                          str(self.difficulty) + str(self.nonce)).hexdigest()
+                                          str(self.difficulty) + str(self.nonce)).encode('utf-8')).hexdigest()
 
     def mine(self):
         self.nonce = 0

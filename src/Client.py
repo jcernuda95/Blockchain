@@ -8,7 +8,7 @@ import signal
 import sys
 import argparse
 
-from .Transcation import BlockChain
+from Transcation import BlockChain
 import pickle
 
 exit_flag = 0
@@ -33,7 +33,7 @@ def Main():
     global exit_flag
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--ip", type=str, default="127.0.0.1", dst='host',
+    parser.add_argument("-i", "--ip", type=str, default="127.0.0.1", dest='host',
                         help="Server IP (default 127.0.0.1)")
     args = parser.parse_args()
     host = args.host
