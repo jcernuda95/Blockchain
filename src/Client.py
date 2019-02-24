@@ -48,7 +48,7 @@ def Main():
     conn.connect((host, port))
 
     ack = pack('>Q', "ACK")
-    conn.send(ack)
+    conn.sendall(ack)
 
     while True:
         try:

@@ -66,13 +66,13 @@ def threaded(conn, addr, blockchain, list_conections):
         blockchain_lock.acquire()
         if blockchain.add_block(block):
             confirm = pack('>Q', "OK")
-            conn.send(confirm)
+            conn.sendall(confirm)
             print_lock.acquire()
             print("Block added")
             print_lock.release()
         else:
             confirm = pack('>Q', "ER")
-            conn.send(confirm)
+            conn.sendall(confirm)
             print_lock.acquire()
             print("Block lost")
             print_lock.release()
