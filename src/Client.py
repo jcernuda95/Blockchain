@@ -47,8 +47,7 @@ def Main():
     # connect to server on local computer
     conn.connect((host, port))
 
-    ack = pack('>Q', "ACK")
-    conn.sendall(ack)
+    conn.sendall("ACK".encode())
 
     while True:
         try:
@@ -88,10 +87,9 @@ def Main():
             conn.sendall(data)
 
             # Wait for server to check block and add it to main blockchain
-            msg = conn.recv(8)
+            status = conn.recv(1024).decode()
             print("Check performed")
             # If the block was incorrect remove it and try again
-            (status,) = unpack('>Q', msg)
             if status is "OK":
                 print("DONE")
                 continue

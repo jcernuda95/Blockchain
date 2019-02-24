@@ -65,14 +65,12 @@ def threaded(conn, addr, blockchain, list_conections):
         # Attempt to add block given to the chain
         blockchain_lock.acquire()
         if blockchain.add_block(block):
-            confirm = pack('>Q', "OK")
-            conn.sendall(confirm)
+            conn.send("OK".encode())
             print_lock.acquire()
             print("Block added")
             print_lock.release()
         else:
-            confirm = pack('>Q', "ER")
-            conn.sendall(confirm)
+            conn.send("FAIL".encode())
             print_lock.acquire()
             print("Block lost")
             print_lock.release()
@@ -134,14 +132,14 @@ def Main():
             print('Connected to :', addr[0], ':', addr[1])
             print_lock.release()
 
-            data = c.recv(8)
-            (ack,) = unpack('>Q', data)
+            data = c.recv(1024).decode()
+            print("data " + data)
             if not data:
                 print_lock.acquire()
                 print('Disconnecting from :', addr[0], ':', addr[1])
                 print_lock.release()
                 c.close()
-            if data.endswith("ACK".encode('ascii')):
+            if data is "ACK":
                 print(data)
                 connection_list_lock.acquire()
                 list_conections.append(c)
