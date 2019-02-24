@@ -25,7 +25,7 @@ def threaded(conn, addr, blockchain, list_conections):
         # Once connection is establish, send the full blockchain to the client
         blockchain_lock.acquire()
         data = pickle.dumps(blockchain)
-        conn.send(str(len(data)))
+        conn.send(str(len(data)).encode('ascii'))
         conn.send(data)
         blockchain_lock.release()
 
@@ -105,6 +105,7 @@ def Main():
                 print_lock.release()
                 c.close()
             if data.endswith("ACK".encode('ascii')):
+                print(data)
                 connection_list_lock.acquire()
                 list_conections.append(c)
                 connection_list_lock.release()
