@@ -54,7 +54,7 @@ def Main():
             if exit_flag is 0:
                 break
             # Receive up-to-date blockchain
-            msg = conn.recv(1024)
+            msg = conn.recv(8)
             (length,) = unpack('>Q', msg)
             print(length)
             data = b''
