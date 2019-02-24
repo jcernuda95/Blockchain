@@ -56,7 +56,7 @@ def threaded(conn, addr, blockchain, list_conections):
         if not data:
             print("Error on Block")
         print_lock.release()
-        blockchain: BlockChain = pickle.loads(data)
+        block: Block = pickle.loads(data)
         print_lock.acquire()
         print("Block transformed")
         print_lock.release()
