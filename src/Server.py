@@ -133,14 +133,12 @@ def Main():
             print_lock.release()
 
             data = c.recv(1024).decode()
-            print("data " + data + str(len(data)))
-            print("data" + data[:3])
             if not data:
                 print_lock.acquire()
                 print('Disconnecting from :', addr[0], ':', addr[1])
                 print_lock.release()
                 c.close()
-            if data is "ACK":
+            if data[:3] == 'ACK':
                 print(data)
                 connection_list_lock.acquire()
                 list_conections.append(c)
