@@ -132,7 +132,7 @@ def Main():
             print('Connected to :', addr[0], ':', addr[1])
             print_lock.release()
 
-            data = c.recv(1024).decode()
+            data = c.recv(3).decode()
             if not data:
                 print_lock.acquire()
                 print('Disconnecting from :', addr[0], ':', addr[1])

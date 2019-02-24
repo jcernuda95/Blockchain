@@ -87,7 +87,7 @@ def Main():
             conn.sendall(data)
 
             # Wait for server to check block and add it to main blockchain
-            status = conn.recv(1024).decode()
+            status = conn.recv(2).decode()
             print("Check performed")
             # If the block was incorrect remove it and try again
             if status[:2] == 'OK':
