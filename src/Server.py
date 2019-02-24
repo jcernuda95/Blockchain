@@ -21,7 +21,7 @@ def signal_handler(sig, frame):
 
 
 # thread fuction
-def threaded(conn, addr, blockchain, list_conections):
+def threaded(conn, addr, blockchain, list_conections,max_length_chain):
     while True:
         # Once connection is establish, send the full blockchain to the client
         blockchain_lock.acquire()
@@ -75,6 +75,14 @@ def threaded(conn, addr, blockchain, list_conections):
             print("Block lost")
             print_lock.release()
         blockchain_lock.release()
+
+        print("length " + str(blockchain.length_chain()))
+        if blockchain.length_chain() > max_length_chain:
+            print_lock.acquire()
+            print('Blockchain completed')
+            blockchain.save_chain()
+            print_lock.release()
+            break
 
     # connection_list_lock.acquire()
     # index = [index for index, i in list_conections if i == conn]
@@ -144,7 +152,7 @@ def Main():
                 list_conections.append(c)
                 connection_list_lock.release()
                 # Start a new thread and return its identifier
-                t = threading.Thread(target=threaded, args=(c, addr, blockChain, list_conections))
+                t = threading.Thread(target=threaded, args=(c, addr, blockChain, list_conections, args.max_length_chain))
                 t.daemon = True
                 t.start()
             else:
