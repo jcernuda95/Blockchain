@@ -33,7 +33,7 @@ def threaded(conn, addr, blockchain, list_conections):
 
         # The client starts to mine, wait until it finishes
         msg = conn.recv(8)
-        print(msg(len))
+        print(len(msg))
         (length,) = unpack('>Q', msg)
         print(length)
         data = b''
