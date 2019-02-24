@@ -53,14 +53,14 @@ def threaded(conn, addr, blockchain, list_conections):
                 4096 if to_read > 4096 else to_read)
         print_lock.acquire()
         print("Block received")
+        if not data:
+            print("Error on Block")
         print_lock.release()
         blockchain: BlockChain = pickle.loads(data)
-        block = pickle.loads(conn.recv(4096))
         print_lock.acquire()
         print("Block transformed")
         print_lock.release()
-        if not block:
-            break
+
 
         # Attempt to add block given to the chain
         blockchain_lock.acquire()
