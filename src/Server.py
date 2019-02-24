@@ -30,12 +30,17 @@ def threaded(conn, addr, blockchain, list_conections):
         conn.sendall(length_chain)
         conn.sendall(data)
         blockchain_lock.release()
+        print_lock.acquire()
+        print("Blockchain sended")
+        print_lock.release()
 
         # The client starts to mine, wait until it finishes
         msg = conn.recv(8)
-        print(len(msg))
         (length,) = unpack('>Q', msg)
+        print_lock.acquire()
+        print(len(msg))
         print(length)
+        print_lock.release()
         data = b''
         while len(data) < length:
             # doing it in batches is generally better than trying
@@ -45,7 +50,9 @@ def threaded(conn, addr, blockchain, list_conections):
                 4096 if to_read > 4096 else to_read)
         blockchain: BlockChain = pickle.loads(data)
         block = pickle.loads(conn.recv(4096))
-
+        print_lock.acquire()
+        print("Block received")
+        print_lock.release()
         if not block:
             break
 
@@ -53,8 +60,14 @@ def threaded(conn, addr, blockchain, list_conections):
         blockchain_lock.acquire()
         if blockchain.add_block(block):
             conn.send("OK".encode('ascii'))
+            print_lock.acquire()
+            print("Block added")
+            print_lock.release()
         else:
             conn.send("FAIL".encode('ascii'))
+            print_lock.acquire()
+            print("Block lost")
+            print_lock.release()
         blockchain_lock.release()
 
     # connection_list_lock.acquire()
@@ -100,7 +113,7 @@ def Main():
             if blockChain.length_chain() > args.max_length_chain:
                 print_lock.acquire()
                 print('Blockchain completed')
-                blockChain.save_chain('./')
+                blockChain.save_chain()
                 print_lock.release()
                 break
             # establish connection with client
@@ -135,7 +148,7 @@ def Main():
                 c.close()
         except (KeyboardInterrupt, socket.error) as e:
             print('Process ended')
-            blockChain.save_chain('./')
+            blockChain.save_chain()
             print(e)
             break
     s.close()

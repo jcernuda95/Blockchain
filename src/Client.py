@@ -66,7 +66,7 @@ def Main():
                     4096 if to_read > 4096 else to_read)
             blockchain: BlockChain = pickle.loads(data)
             # blockchain: BlockChain = pickle.loads(conn.recv(4096))
-
+            print("Blockchain Received")
             # Start new thread to run the mining
             t = threading.Thread(target=threaded, args=(blockchain, ))
             t.daemon = True
@@ -74,8 +74,9 @@ def Main():
 
             # Wait until block is calculated
             t.join()
-
+            print("Finish mining")
             # Send last block to the server
+            print("Sending Block")
             data = pickle.dumps(blockchain.lookup_block_by_index(-1))
             length = pack('>Q', len(data))
 
@@ -84,9 +85,12 @@ def Main():
 
             # Wait for server to check block and add it to main blockchain
             msg = conn.recv(1024)
-
+            print("Check performed")
             # If the block was incorrect remove it and try again
-            if msg is not "OK":
+            if msg.endswith("ACK".encode('ascii')):
+                print("DONE")
+                continue
+            else:
                 blockchain.remove_last_block()
                 print("Error: Block generated was incorrect, trying again")
         except socket.error as e:
