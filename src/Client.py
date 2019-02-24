@@ -12,7 +12,7 @@ from struct import pack, unpack
 from Transcation import BlockChain
 import pickle
 
-exit_flag = 0
+exit_flag = -1
 
 # TODO: On multiple servers, how to stop mining from happening
 
