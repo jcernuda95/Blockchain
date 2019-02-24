@@ -70,7 +70,7 @@ def threaded(conn, addr, blockchain, list_conections):
             print("Block added")
             print_lock.release()
         else:
-            conn.send("FAIL".encode())
+            conn.send("ER".encode())
             print_lock.acquire()
             print("Block lost")
             print_lock.release()
@@ -139,7 +139,6 @@ def Main():
                 print_lock.release()
                 c.close()
             if data[:3] == 'ACK':
-                print(data)
                 connection_list_lock.acquire()
                 list_conections.append(c)
                 connection_list_lock.release()

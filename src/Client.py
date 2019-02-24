@@ -90,7 +90,7 @@ def Main():
             status = conn.recv(1024).decode()
             print("Check performed")
             # If the block was incorrect remove it and try again
-            if status is "OK":
+            if status[:2] == 'OK':
                 print("DONE")
                 continue
             else:
