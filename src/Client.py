@@ -7,6 +7,7 @@ from typing import Optional, Any
 import signal
 import sys
 import argparse
+from struct import pack, unpack
 
 from Transcation import BlockChain
 import pickle
@@ -53,7 +54,8 @@ def Main():
             if exit_flag is 0:
                 break
             # Receive up-to-date blockchain
-            length = int(conn.recv(64))
+            msg = conn.recv(1024)
+            (length,) = unpack('>Q', msg)
             print(length)
             data = b''
             while len(data) < length:
@@ -75,8 +77,10 @@ def Main():
 
             # Send last block to the server
             data = pickle.dumps(blockchain.lookup_block_by_index(-1))
-            conn.send(str(len(data)).encode('ascii'))
-            conn.send(data)
+            length = pack('>Q', len(data))
+
+            conn.sendall(length)
+            conn.sendall(data)
 
             # Wait for server to check block and add it to main blockchain
             msg = conn.recv(1024)

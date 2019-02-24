@@ -6,6 +6,7 @@ import sys
 import threading
 import pickle
 import argparse
+from struct import pack, unpack
 
 print_lock = threading.Lock()
 blockchain_lock = threading.Lock()
@@ -25,12 +26,14 @@ def threaded(conn, addr, blockchain, list_conections):
         # Once connection is establish, send the full blockchain to the client
         blockchain_lock.acquire()
         data = pickle.dumps(blockchain)
-        conn.send(str(len(data)).encode('ascii'))
-        conn.send(data)
+        length_chain = pack('>Q', len(data))
+        conn.sendall(length_chain)
+        conn.sendall(data)
         blockchain_lock.release()
 
         # The client starts to mine, wait until it finishes
-        length = int(conn.recv(1024))
+        msg = conn.recv(1024)
+        (length,) = unpack('>Q', msg)
         print(length)
         data = b''
         while len(data) < length:
