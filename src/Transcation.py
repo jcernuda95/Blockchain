@@ -46,7 +46,7 @@ class BlockChain:
     def save_chain(self, path='./blockchain.info'):
         info = {
             "difficulty": self.difficulty,
-            "chain": self.chain,
+            "chain": [ob.__dict__ for ob in self.chain],
         }
         # opening with "a" allows to append, something to consider if the chain gets to long.
         with open(path, "w") as file:

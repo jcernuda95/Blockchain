@@ -57,6 +57,7 @@ def Main():
             msg = conn.recv(8)
             (length,) = unpack('>Q', msg)
             print(length)
+            print(len(msg))
             data = b''
             while len(data) < length:
                 # doing it in batches is generally better than trying
@@ -80,7 +81,7 @@ def Main():
             print("Sending Block")
             data = pickle.dumps(blockchain.lookup_block_by_index(-1))
             length = pack('>Q', len(data))
-
+            print(len(length))
             conn.sendall(length)
             conn.sendall(data)
 
