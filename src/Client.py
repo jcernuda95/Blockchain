@@ -67,6 +67,7 @@ def Main():
             blockchain: BlockChain = pickle.loads(data)
             # blockchain: BlockChain = pickle.loads(conn.recv(4096))
             print("Blockchain Received")
+            blockchain.save_chain()
             # Start new thread to run the mining
             t = threading.Thread(target=threaded, args=(blockchain, ))
             t.daemon = True

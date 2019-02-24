@@ -43,15 +43,21 @@ def threaded(conn, addr, blockchain, list_conections):
         print_lock.release()
         data = b''
         while len(data) < length:
+            print_lock.acquire()
+            print("receiving block")
+            print_lock.release()
             # doing it in batches is generally better than trying
             # to do it all in one go, so I believe.
             to_read = length - len(data)
             data += conn.recv(
                 4096 if to_read > 4096 else to_read)
+        print_lock.acquire()
+        print("Block received")
+        print_lock.release()
         blockchain: BlockChain = pickle.loads(data)
         block = pickle.loads(conn.recv(4096))
         print_lock.acquire()
-        print("Block received")
+        print("Block transformed")
         print_lock.release()
         if not block:
             break
