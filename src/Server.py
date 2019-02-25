@@ -28,9 +28,6 @@ def signal_handler(sig, frame):
 def threaded(conn, addr, max_length_chain):
     global blockChain
     while True:
-        while brutal_lock.locked():
-            print("Locked Thread" + str(blockChain.lookup_block_by_index(-1).index))
-        brutal_lock.acquire()
         print_lock.acquire()
         print("Blockchain length (thread):" + str(blockChain.length_chain()))
         print_lock.release()
@@ -79,6 +76,7 @@ def threaded(conn, addr, max_length_chain):
 
         # Attempt to add block given to the chain
         blockchain_lock.acquire()
+        print(blockChain.lookup_block_by_index(-1).index)
         if blockChain.add_block(block):
             conn.send("OK".encode())
             print_lock.acquire()
@@ -89,7 +87,6 @@ def threaded(conn, addr, max_length_chain):
             print_lock.acquire()
             print("Block lost")
             print_lock.release()
-        blockchain_lock.release()
 
         print("length " + str(blockChain.length_chain()))
         if blockChain.length_chain() > max_length_chain:
@@ -101,7 +98,7 @@ def threaded(conn, addr, max_length_chain):
             fin = pack('>Q', 0)
             conn.sendall(fin)
             break
-        brutal_lock.release()
+        blockchain_lock.release()
 
     # connection_list_lock.acquire()
     # index = [index for index, i in list_conections if i == conn]
