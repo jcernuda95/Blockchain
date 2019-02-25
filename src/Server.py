@@ -26,6 +26,9 @@ def signal_handler(sig, frame):
 # thread fuction
 def threaded(conn, addr, max_length_chain):
     global BlockChain
+    print_lock.acquire()
+    print("Blockchain length (thread):" + str(blockChain.length_chain()))
+    print_lock.release()
     while True:
         print_lock.acquire()
         print("Blockchain length (thread):" + str(blockChain.length_chain()))
@@ -130,7 +133,7 @@ def Main():
     print("Socket binded to port ", port)
 
     # Initialize the blockchain
-    blockChain = BlockChain(args.difficulty)
+    # blockChain = BlockChain(args.difficulty)
 
     # Put the socket into listening mode
     s.listen(5)
