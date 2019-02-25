@@ -26,17 +26,13 @@ def signal_handler(sig, frame):
 # thread fuction
 def threaded(conn, addr, max_length_chain):
     global blockChain
-    print(blockChain)
-    print_lock.acquire()
-    print("Blockchain length (thread):" + str(blockChain.length_chain()))
-    print_lock.release()
     while True:
         print_lock.acquire()
         print("Blockchain length (thread):" + str(blockChain.length_chain()))
         print_lock.release()
         # Once connection is establish, send the full blockchain to the client
         blockchain_lock.acquire()
-        data = pickle.dumps(BlockChain)
+        data = pickle.dumps(blockChain)
         length_chain = pack('>Q', len(data))
         conn.sendall(length_chain)
         conn.sendall(data)
@@ -77,7 +73,7 @@ def threaded(conn, addr, max_length_chain):
 
         # Attempt to add block given to the chain
         blockchain_lock.acquire()
-        if BlockChain.add_block(block):
+        if blockChain.add_block(block):
             conn.send("OK".encode())
             print_lock.acquire()
             print("Block added")
@@ -89,11 +85,11 @@ def threaded(conn, addr, max_length_chain):
             print_lock.release()
         blockchain_lock.release()
 
-        print("length " + str(BlockChain.length_chain()))
-        if BlockChain.length_chain() > max_length_chain:
+        print("length " + str(blockChain.length_chain()))
+        if blockChain.length_chain() > max_length_chain:
             print_lock.acquire()
             print('Blockchain completed')
-            BlockChain.save_chain()
+            blockChain.save_chain()
             print_lock.release()
             # Close clients
             fin = pack('>Q', 0)
@@ -142,15 +138,18 @@ def Main():
 
     while True:
         try:
+            blockchain_lock.acquire()
             print_lock.acquire()
             print("Blockchain length (main):" + str(blockChain.length_chain()))
             print_lock.release()
             if blockChain.length_chain() > args.max_length_chain:
                 print_lock.acquire()
+
                 print('Blockchain completed. Press ctr+c to exit')
                 blockChain.save_chain()
                 print_lock.release()
                 break
+            blockchain_lock.release()
             # establish connection with client
             while len(list_conections) > args.max_connections:
                 continue
