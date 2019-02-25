@@ -82,7 +82,8 @@ def threaded(conn, addr, max_length_chain):
             max_index = blockChain.lookup_block_by_index(-1).index
             print(max_index)
 
-        if blockChain.add_block(block) and blockChain.lookup_block_by_index(-1).index == max_index:
+        if blockChain.check_block(block) and blockChain.lookup_block_by_index(-1).index == max_index:
+            blockChain.add_block(block)
             conn.send("OK".encode())
             print_lock.acquire()
             print("Block added")
