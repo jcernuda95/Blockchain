@@ -41,10 +41,12 @@ def threaded(conn, addr, max_length_chain):
         # The client starts to mine, wait until it finishes
         msg = conn.recv(8)
         (length,) = unpack('>Q', msg)
+
         print_lock.acquire()
         print(len(msg))
         print(length)
         print_lock.release()
+
         data = b''
         while len(data) < length:
             print_lock.acquire()
@@ -133,7 +135,6 @@ def Main():
 
     while True:
         try:
-            print("length " + str(blockChain.length_chain()))
             if blockChain.length_chain() > args.max_length_chain:
                 print_lock.acquire()
                 print('Blockchain completed. Press ctr+c to exit')

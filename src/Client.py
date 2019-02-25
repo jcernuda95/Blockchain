@@ -82,6 +82,7 @@ def Main():
             print("Finish mining")
             # Send last block to the server
             print("Sending Block")
+            print(blockchain.lookup_block_by_index(-1).index)
             data = pickle.dumps(blockchain.lookup_block_by_index(-1))
             length = pack('>Q', len(data))
             conn.sendall(length)
