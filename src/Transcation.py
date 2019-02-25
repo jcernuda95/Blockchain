@@ -28,7 +28,7 @@ class Block:
                 # Successful mine
                 return attempt_hash
             else:
-                self.nonce = hashlib.sha512(''.join(random.choices(string.ascii_uppercase + string.digits, k=20))).hexdigest()
+                self.nonce = hashlib.sha512(''.join(random.choices(string.ascii_uppercase + string.digits, k=20)).encode('utf-8')).hexdigest()
 
 
 class BlockChain:
