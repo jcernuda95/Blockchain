@@ -14,6 +14,7 @@ connection_list_lock = threading.Lock()
 brutal_lock = threading.Lock()
 
 blockChain = 10
+max_index = 0
 
 # TODO: How to stop mining from happening. Event on mine happen to all other thread. Non blocking recv
 # TODO: Add logic to delete conections lost and allow more miners to enter.
@@ -27,6 +28,7 @@ def signal_handler(sig, frame):
 # thread fuction
 def threaded(conn, addr, max_length_chain):
     global blockChain
+    global max_index
     while True:
         print_lock.acquire()
         print("Blockchain length (thread):" + str(blockChain.length_chain()))
@@ -76,8 +78,11 @@ def threaded(conn, addr, max_length_chain):
 
         # Attempt to add block given to the chain
         blockchain_lock.acquire()
-        print(blockChain.lookup_block_by_index(-1).index)
-        if blockChain.add_block(block):
+        if blockChain.lookup_block_by_index(-1).index > max_index:
+            max_index = blockChain.lookup_block_by_index(-1).index
+            print(max_index)
+
+        if blockChain.add_block(block) and blockChain.lookup_block_by_index(-1).index == max_index:
             conn.send("OK".encode())
             print_lock.acquire()
             print("Block added")
