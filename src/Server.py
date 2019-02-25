@@ -100,6 +100,7 @@ def threaded(conn, addr, max_length_chain):
 
 
 def Main():
+    global blockChain
     host = ""
     port = 12345
 
