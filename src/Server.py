@@ -134,7 +134,7 @@ def Main():
     print("socket is listening")
 
     while True:
-        try
+        try:
             print_lock.acquire()
             print(blockChain.length_chain())
             print_lock.release()
