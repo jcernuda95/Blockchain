@@ -25,7 +25,7 @@ def signal_handler(sig, frame):
 
 # thread fuction
 def threaded(conn, addr, max_length_chain):
-    global BlockChain
+    global blockChain
     print(blockChain)
     print_lock.acquire()
     print("Blockchain length (thread):" + str(blockChain.length_chain()))
