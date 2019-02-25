@@ -1,6 +1,6 @@
 import threading
 
-blockChain = 10
+BlockChain = 10
 
 
 def threaded():
@@ -12,14 +12,14 @@ def threaded():
 
 def Main():
     global BlockChain
-    blockChain = "Hello"
+    BlockChain = "Hello"
     while True:
         try:
             print("Main:" + BlockChain)
             t = threading.Thread(target=threaded, args=())
             t.daemon = True
             t.start()
-        except (KeyboardInterrupt, socket.error) as e:
+        except KeyboardInterrupt as e:
             print('Process ended')
             print(e)
             break
