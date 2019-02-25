@@ -11,7 +11,7 @@ class Block:
         self.previous_hash = previous_hash
         self.difficulty = difficulty
         self.nonce = 0
-        self.hash = self.mine()
+        self.hash= self.mine()
 
     def calculate_hash(self):
         return hashlib.sha224((str(self.index) + str(self.timestamp) +
