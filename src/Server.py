@@ -28,6 +28,8 @@ def signal_handler(sig, frame):
 def threaded(conn, addr, max_length_chain):
     global blockChain
     while True:
+        while brutal_lock.locked():
+            print("Locked Thread" + str(blockChain.lookup_block_by_index(-1).index))
         brutal_lock.acquire()
         print_lock.acquire()
         print("Blockchain length (thread):" + str(blockChain.length_chain()))
