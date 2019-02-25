@@ -11,6 +11,7 @@ from struct import pack, unpack
 print_lock = threading.Lock()
 blockchain_lock = threading.Lock()
 connection_list_lock = threading.Lock()
+brutal_lock = threading.Lock()
 
 blockChain = 10
 
@@ -25,11 +26,13 @@ def signal_handler(sig, frame):
 
 # thread fuction
 def threaded(conn, addr, max_length_chain):
+    global blockChain
     while True:
-        global blockChain
+        brutal_lock.acquire()
         print_lock.acquire()
         print("Blockchain length (thread):" + str(blockChain.length_chain()))
         print_lock.release()
+
         # Once connection is establish, send the full blockchain to the client
         blockchain_lock.acquire()
         data = pickle.dumps(blockChain)
@@ -96,6 +99,7 @@ def threaded(conn, addr, max_length_chain):
             fin = pack('>Q', 0)
             conn.sendall(fin)
             break
+        brutal_lock.release()
 
     # connection_list_lock.acquire()
     # index = [index for index, i in list_conections if i == conn]
