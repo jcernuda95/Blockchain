@@ -81,8 +81,11 @@ class BlockChain:
 
     def check_block(self, block):
         previous_block = self.lookup_block_by_index(block.index - 1)
-        print("Block Info = " + block.hash[-3:] + " " + block.previous_hash[-3:] + " " + str(block.index) + " " + str(block.timestamp))
-        print("PreviousBlock Info = " + block.calculate_hash()[-3:] + " " + previous_block.hash[-3:] + " " + str(previous_block.index) + " " + + str(previous_block.timestamp))
+        print("Hash (=)= " + block.hash[-3:] + " " + block.calculate_hash()[-3:])
+        print("Previous Hash (=) = " + block.previous_hash[-3:] + " " + previous_block.hash[-3:])
+        print("Index (>)= " + str(block.index) + " " + str(previous_block.index))
+        print("timestamp (>)= " + str(block.index) + " " + str(previous_block.timestamp))
+
         if (isinstance(block, Block) and previous_block.timestamp < block.timestamp and
                 block.index - previous_block.index == 1 and block.previous_hash == previous_block.hash and
                 block.hash == block.calculate_hash()):
