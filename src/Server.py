@@ -134,7 +134,10 @@ def Main():
     print("socket is listening")
 
     while True:
-        try:
+        try
+            print_lock.acquire()
+            print(blockChain.length_chain())
+            print_lock.release()
             if blockChain.length_chain() > args.max_length_chain:
                 print_lock.acquire()
                 print('Blockchain completed. Press ctr+c to exit')
