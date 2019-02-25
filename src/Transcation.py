@@ -21,7 +21,7 @@ class Block:
                                           str(self.difficulty) + str(self.nonce)).encode('utf-8')).hexdigest()
 
     def mine(self):
-        self.nonce = hashlib.sha512(''.join(random.choices(string.ascii_uppercase + string.digits, k=20))).hexdigest()
+        self.nonce = hashlib.sha512(''.join(random.choices(string.ascii_uppercase + string.digits, k=20)).encode('utf-8')).hexdigest()
         while True:
             attempt_hash = self.calculate_hash()
             if int(attempt_hash, 16) < pow(2, 256-self.difficulty):
