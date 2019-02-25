@@ -13,6 +13,7 @@ blockchain_lock = threading.Lock()
 connection_list_lock = threading.Lock()
 
 # TODO: How to stop mining from happening. Event on mine happen to all other thread. Non blocking recv
+# TODO: Add logic to delete conections lost and allow more miners to enter.
 
 
 def signal_handler(sig, frame):
@@ -82,6 +83,9 @@ def threaded(conn, addr, blockchain, list_conections,max_length_chain):
             print('Blockchain completed')
             blockchain.save_chain()
             print_lock.release()
+            # Close clients
+            fin = pack('>Q', -1)
+            conn.sendall(fin)
             break
 
     # connection_list_lock.acquire()
@@ -128,7 +132,7 @@ def Main():
             print("length " + str(blockChain.length_chain()))
             if blockChain.length_chain() > args.max_length_chain:
                 print_lock.acquire()
-                print('Blockchain completed')
+                print('Blockchain completed. Press ctr+c to exit')
                 blockChain.save_chain()
                 print_lock.release()
                 break

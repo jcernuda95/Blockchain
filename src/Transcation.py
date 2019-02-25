@@ -56,6 +56,7 @@ class BlockChain:
     def add_block(self, block):
         # useful for the server on block received
         if self.check_block(block):
+            print("Adding block")
             self.chain.append(block)
             return True
         else:
@@ -91,15 +92,19 @@ class BlockChain:
                             return True
                         else:
                             print("Hash of block is wrong")
+                            return False
                     else:
                         print("Hash of previous block doesnt match")
+                        return False
                 else:
                     print("error on Block index")
+                    return False
             else:
                 print("error on timestamp")
+                return False
         else:
             print("error block is not a block")
-        return False
+            return False
 
     def check_chain(self, start=0, end=None):
         if end is None: end = len(self.chain)
