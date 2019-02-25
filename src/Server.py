@@ -143,7 +143,6 @@ def Main():
 
     while True:
         try:
-            global BlockChain
             print_lock.acquire()
             print("Blockchain length (main):" + str(blockChain.length_chain()))
             print_lock.release()
