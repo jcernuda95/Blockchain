@@ -26,6 +26,7 @@ def signal_handler(sig, frame):
 # thread fuction
 def threaded(conn, addr, max_length_chain):
     while True:
+        global blockChain
         print_lock.acquire()
         print("Blockchain length (thread):" + str(blockChain.length_chain()))
         print_lock.release()
@@ -73,7 +74,6 @@ def threaded(conn, addr, max_length_chain):
 
         # Attempt to add block given to the chain
         blockchain_lock.acquire()
-        global blockChain
         if blockChain.add_block(block):
             conn.send("OK".encode())
             print_lock.acquire()
