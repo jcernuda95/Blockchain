@@ -24,3 +24,7 @@ def Main():
             print('Process ended')
             print(e)
             break
+
+
+if __name__ == '__main__':
+    Main()
