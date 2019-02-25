@@ -60,8 +60,6 @@ def Main():
             if length is 0:
                 print("blockchain done")
                 break
-            print(length)
-            print(len(msg))
             data = b''
             while len(data) < length:
                 print("receiving Chain")
@@ -86,7 +84,6 @@ def Main():
             print("Sending Block")
             data = pickle.dumps(blockchain.lookup_block_by_index(-1))
             length = pack('>Q', len(data))
-            print(len(length))
             conn.sendall(length)
             conn.sendall(data)
 

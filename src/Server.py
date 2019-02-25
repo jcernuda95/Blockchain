@@ -11,6 +11,7 @@ from struct import pack, unpack
 print_lock = threading.Lock()
 blockchain_lock = threading.Lock()
 connection_list_lock = threading.Lock()
+blockChain
 
 # TODO: How to stop mining from happening. Event on mine happen to all other thread. Non blocking recv
 # TODO: Add logic to delete conections lost and allow more miners to enter.
@@ -22,15 +23,17 @@ def signal_handler(sig, frame):
 
 
 # thread fuction
-def threaded(conn, addr, blockchain, list_conections,max_length_chain):
+def threaded(conn, addr, max_length_chain):
     while True:
+        global blockChain
         # Once connection is establish, send the full blockchain to the client
         blockchain_lock.acquire()
-        data = pickle.dumps(blockchain)
+        data = pickle.dumps(blockChain)
         length_chain = pack('>Q', len(data))
         conn.sendall(length_chain)
         conn.sendall(data)
         blockchain_lock.release()
+
         print_lock.acquire()
         print("Blockchain sended")
         print_lock.release()
@@ -39,25 +42,23 @@ def threaded(conn, addr, blockchain, list_conections,max_length_chain):
         msg = conn.recv(8)
         (length,) = unpack('>Q', msg)
         print_lock.acquire()
-        print(len(msg))
-        print(length)
-        print_lock.release()
+
         data = b''
         while len(data) < length:
-            print_lock.acquire()
-            print("receiving block")
-            print_lock.release()
             # doing it in batches is generally better than trying
             # to do it all in one go, so I believe.
             to_read = length - len(data)
             data += conn.recv(
                 4096 if to_read > 4096 else to_read)
+
         print_lock.acquire()
         print("Block received")
         if not data:
             print("Error on Block")
         print_lock.release()
+
         block: Block = pickle.loads(data)
+
         print_lock.acquire()
         print("Block transformed")
         print_lock.release()
@@ -65,7 +66,7 @@ def threaded(conn, addr, blockchain, list_conections,max_length_chain):
 
         # Attempt to add block given to the chain
         blockchain_lock.acquire()
-        if blockchain.add_block(block):
+        if blockChain.add_block(block):
             conn.send("OK".encode())
             print_lock.acquire()
             print("Block added")
@@ -77,11 +78,11 @@ def threaded(conn, addr, blockchain, list_conections,max_length_chain):
             print_lock.release()
         blockchain_lock.release()
 
-        print("length " + str(blockchain.length_chain()))
-        if blockchain.length_chain() > max_length_chain:
+        print("length " + str(blockChain.length_chain()))
+        if blockChain.length_chain() > max_length_chain:
             print_lock.acquire()
             print('Blockchain completed')
-            blockchain.save_chain()
+            blockChain.save_chain()
             print_lock.release()
             # Close clients
             fin = pack('>Q', 0)
@@ -157,7 +158,7 @@ def Main():
                 list_conections.append(c)
                 connection_list_lock.release()
                 # Start a new thread and return its identifier
-                t = threading.Thread(target=threaded, args=(c, addr, blockChain, list_conections, args.max_length_chain))
+                t = threading.Thread(target=threaded, args=(c, addr, args.max_length_chain))
                 t.daemon = True
                 t.start()
             else:

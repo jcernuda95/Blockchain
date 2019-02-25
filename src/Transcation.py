@@ -94,27 +94,6 @@ class BlockChain:
             return True
         else:
             return False
-        # if isinstance(block, Block):
-        #     if previous_block.timestamp < block.timestamp:
-        #         if block.index - previous_block.index == 1:
-        #             if block.previous_hash == previous_block.hash:
-        #                 if block.hash == block.calculate_hash():
-        #                     return True
-        #                 else:
-        #                     print("Hash of block is wrong " + str(block.hash[-3:]) + + " " + str(block.calculate_hash()[-3:]))
-        #                     return False
-        #             else:
-        #                 print("Hash of previous block doesnt match" + str(block.previous_hash[-3:]) + + " " + str(previous_block.hash[-3:]))
-        #                 return False
-        #         else:
-        #             print("error on Block index" + str(block.index) + + " " + str(previous_block.index))
-        #             return False
-        #     else:
-        #         print("error on timestamp" + str(previous_block.timestamp) + + " " + str(block.timestamp))
-        #         return False
-        # else:
-        #     print("error block is not a block")
-        #     return False
 
     def check_chain(self, start=0, end=None):
         if end is None: end = len(self.chain)
