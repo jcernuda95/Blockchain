@@ -133,7 +133,7 @@ def Main():
     print("Socket binded to port ", port)
 
     # Initialize the blockchain
-    # blockChain = BlockChain(args.difficulty)
+    blockChain = BlockChain(args.difficulty)
 
     # Put the socket into listening mode
     s.listen(5)
