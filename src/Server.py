@@ -84,7 +84,7 @@ def threaded(conn, addr, blockchain, list_conections,max_length_chain):
             blockchain.save_chain()
             print_lock.release()
             # Close clients
-            fin = pack('>Q', -1)
+            fin = pack('>Q', 0)
             conn.sendall(fin)
             break
 

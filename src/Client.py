@@ -57,7 +57,7 @@ def Main():
             msg = conn.recv(8)
             #if length -1 then exit
             (length,) = unpack('>Q', msg)
-            if length < 0:
+            if length is 0:
                 print("blockchain done")
                 break
             print(length)
