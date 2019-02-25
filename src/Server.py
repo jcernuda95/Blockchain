@@ -11,7 +11,7 @@ from struct import pack, unpack
 print_lock = threading.Lock()
 blockchain_lock = threading.Lock()
 connection_list_lock = threading.Lock()
-blockChain
+blockChain = None
 
 # TODO: How to stop mining from happening. Event on mine happen to all other thread. Non blocking recv
 # TODO: Add logic to delete conections lost and allow more miners to enter.
