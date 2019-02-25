@@ -27,6 +27,9 @@ def signal_handler(sig, frame):
 def threaded(conn, addr, max_length_chain):
     global BlockChain
     while True:
+        print_lock.acquire()
+        print("Blockchain length (thread):" + blockChain.length_chain())
+        print_lock.release()
         # Once connection is establish, send the full blockchain to the client
         blockchain_lock.acquire()
         data = pickle.dumps(BlockChain)
@@ -136,7 +139,7 @@ def Main():
     while True:
         try:
             print_lock.acquire()
-            print(blockChain.length_chain())
+            print("Blockchain length (main):" + blockChain.length_chain())
             print_lock.release()
             if blockChain.length_chain() > args.max_length_chain:
                 print_lock.acquire()
