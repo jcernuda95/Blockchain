@@ -55,7 +55,7 @@ class BlockChain:
 
     def add_block(self, block):
         # useful for the server on block received
-        if self.check_block(block):
+        if self.check_block(block) is True:
             print("Adding block")
             self.chain.append(block)
             return True
@@ -80,31 +80,36 @@ class BlockChain:
         return self.chain[index]
 
     def check_block(self, block):
+        print("Block Info = " + str(block.hash[-3:]) + " " + str(block.previous_hash[-3:]) + " " + str(block.index) + " " + + str(block.timestamp))
+        print("PreviousBlock Info = " + str(block.calculate_hash()[-3:]) + " " + str(previous_block.hash[-3:]) + " " + str(previous_block.index) + " " + + str(previous_block.timestamp))
         previous_block = self.lookup_block_by_index(block.index - 1)
-        # if (isinstance(block, Block) and previous_block.timestamp < block.timestamp and
-        #         block.index - previous_block.index == 1 and block.previous_hash == previous_block.hash and
-        #         block.hash == block.calculate_hash()):
-        if isinstance(block, Block):
-            if previous_block.timestamp < block.timestamp:
-                if block.index - previous_block.index == 1:
-                    if block.previous_hash == previous_block.hash:
-                        if block.hash == block.calculate_hash():
-                            return True
-                        else:
-                            print("Hash of block is wrong")
-                            return False
-                    else:
-                        print("Hash of previous block doesnt match")
-                        return False
-                else:
-                    print("error on Block index")
-                    return False
-            else:
-                print("error on timestamp")
-                return False
+        if (isinstance(block, Block) and previous_block.timestamp < block.timestamp and
+                block.index - previous_block.index == 1 and block.previous_hash == previous_block.hash and
+                block.hash == block.calculate_hash()):
+            return True
         else:
-            print("error block is not a block")
             return False
+        # if isinstance(block, Block):
+        #     if previous_block.timestamp < block.timestamp:
+        #         if block.index - previous_block.index == 1:
+        #             if block.previous_hash == previous_block.hash:
+        #                 if block.hash == block.calculate_hash():
+        #                     return True
+        #                 else:
+        #                     print("Hash of block is wrong " + str(block.hash[-3:]) + + " " + str(block.calculate_hash()[-3:]))
+        #                     return False
+        #             else:
+        #                 print("Hash of previous block doesnt match" + str(block.previous_hash[-3:]) + + " " + str(previous_block.hash[-3:]))
+        #                 return False
+        #         else:
+        #             print("error on Block index" + str(block.index) + + " " + str(previous_block.index))
+        #             return False
+        #     else:
+        #         print("error on timestamp" + str(previous_block.timestamp) + + " " + str(block.timestamp))
+        #         return False
+        # else:
+        #     print("error block is not a block")
+        #     return False
 
     def check_chain(self, start=0, end=None):
         if end is None: end = len(self.chain)
