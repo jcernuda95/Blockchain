@@ -112,7 +112,6 @@ def threaded(conn, addr, max_length_chain):
 
 
 def Main():
-    global BlockChain
     host = ""
     port = 12345
 
@@ -135,6 +134,7 @@ def Main():
     print("Socket binded to port ", port)
 
     # Initialize the blockchain
+    global BlockChain
     blockChain = BlockChain(args.difficulty)
 
     # Put the socket into listening mode
