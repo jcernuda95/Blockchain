@@ -13,6 +13,7 @@ def threaded():
 def Main():
     global BlockChain
     BlockChain = "Hello"
+    print("LILLU")
     while True:
         try:
             print("Main:" + BlockChain)
