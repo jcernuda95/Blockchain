@@ -11,7 +11,7 @@ class Block:
         self.previous_hash = previous_hash
         self.difficulty = difficulty
         self.nonce = 0
-        self.hash= self.mine()
+        self.hash = self.mine()
 
     def calculate_hash(self):
         return hashlib.sha224((str(self.index) + str(self.timestamp) +
@@ -80,12 +80,26 @@ class BlockChain:
 
     def check_block(self, block):
         previous_block = self.lookup_block_by_index(block.index - 1)
-        if (isinstance(block, Block) and previous_block.timestamp < block.timestamp and
-                block.index - previous_block.index == 1 and block.previous_hash == previous_block.hash and
-                block.hash == block.calculate_hash()):
-            return True
+        # if (isinstance(block, Block) and previous_block.timestamp < block.timestamp and
+        #         block.index - previous_block.index == 1 and block.previous_hash == previous_block.hash and
+        #         block.hash == block.calculate_hash()):
+        if isinstance(block, Block):
+            if previous_block.timestamp < block.timestamp:
+                if block.index - previous_block.index == 1:
+                    if block.previous_hash == previous_block.hash:
+                        if block.hash == block.calculate_hash():
+                            return True
+                        else:
+                            print("Hash of block is wrong")
+                    else:
+                        print("Hash of previous block doesnt match")
+                else:
+                    print("error on Block index")
+            else:
+                print("error on timestamp")
         else:
-            return False
+            print("error block is not a block")
+        return False
 
     def check_chain(self, start=0, end=None):
         if end is None: end = len(self.chain)

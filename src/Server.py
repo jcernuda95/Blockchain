@@ -108,8 +108,6 @@ def Main():
     args = parser.parse_args()
 
     list_conections = []
-    # Initialize the blockchain
-    blockChain = BlockChain(args.difficulty)
 
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -117,6 +115,9 @@ def Main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
     print("Socket binded to port ", port)
+
+    # Initialize the blockchain
+    blockChain = BlockChain(args.difficulty)
 
     # Put the socket into listening mode
     s.listen(5)
