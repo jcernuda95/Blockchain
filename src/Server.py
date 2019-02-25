@@ -31,7 +31,6 @@ def threaded(conn, addr, max_length_chain):
     print("Blockchain length (thread):" + str(blockChain.length_chain()))
     print_lock.release()
     while True:
-        global BlockChain
         print_lock.acquire()
         print("Blockchain length (thread):" + str(blockChain.length_chain()))
         print_lock.release()
@@ -134,7 +133,7 @@ def Main():
     print("Socket binded to port ", port)
 
     # Initialize the blockchain
-    global BlockChain
+    global blockChain
     blockChain = BlockChain(args.difficulty)
 
     # Put the socket into listening mode
