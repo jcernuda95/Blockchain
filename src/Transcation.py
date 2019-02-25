@@ -1,6 +1,8 @@
 import time
 import hashlib
 import json
+import random
+import string
 
 
 class Block:
@@ -19,14 +21,14 @@ class Block:
                                           str(self.difficulty) + str(self.nonce)).encode('utf-8')).hexdigest()
 
     def mine(self):
-        self.nonce = 0
+        self.nonce = hashlib.sha512(''.join(random.choices(string.ascii_uppercase + string.digits, k=20))).hexdigest()
         while True:
             attempt_hash = self.calculate_hash()
             if int(attempt_hash, 16) < pow(2, 256-self.difficulty):
                 # Successful mine
                 return attempt_hash
             else:
-                self.nonce += 1
+                self.nonce = hashlib.sha512(''.join(random.choices(string.ascii_uppercase + string.digits, k=20))).hexdigest()
 
 
 class BlockChain:
