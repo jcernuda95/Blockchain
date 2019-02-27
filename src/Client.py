@@ -27,7 +27,7 @@ def signal_handler(sig, frame):
     global exit_flag
     print('Closing server')
     exit_flag = 1
-    sys.exit(0)
+    sys.exit(1)
 
 
 def Main():
@@ -62,7 +62,6 @@ def Main():
                 break
             data = b''
             while len(data) < length:
-                print("receiving Chain")
                 # doing it in batches is generally better than trying
                 # to do it all in one go, so I believe.
                 to_read = length - len(data)
@@ -81,7 +80,6 @@ def Main():
             t.join()
             print("Finish mining")
             # Send last block to the server
-            print("Sending Block")
             print(blockchain.lookup_block_by_index(-1).index)
             data = pickle.dumps(blockchain.lookup_block_by_index(-1))
             length = pack('>Q', len(data))
@@ -90,7 +88,6 @@ def Main():
 
             # Wait for server to check block and add it to main blockchain
             status = conn.recv(2).decode()
-            print("Check performed")
             # If the block was incorrect remove it and try again
             if status[:2] == 'OK':
                 print("DONE")

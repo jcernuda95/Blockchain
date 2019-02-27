@@ -31,7 +31,7 @@ def threaded(conn, addr, max_length_chain):
     global max_index
     while True:
         print_lock.acquire()
-        print("Blockchain length (thread):" + str(blockChain.length_chain()))
+        print("Blockchain length:" + str(blockChain.length_chain()))
         print_lock.release()
 
         # Once connection is establish, send the full blockchain to the client
@@ -58,7 +58,6 @@ def threaded(conn, addr, max_length_chain):
         data = b''
         while len(data) < length:
             print_lock.acquire()
-            print("receiving block")
             print_lock.release()
             # doing it in batches is generally better than trying
             # to do it all in one go, so I believe.
@@ -70,9 +69,8 @@ def threaded(conn, addr, max_length_chain):
         if not data:
             print("Error on Block")
         print_lock.release()
-        block: Block = pickle.loads(data)
+        block = pickle.loads(data)
         print_lock.acquire()
-        print("Block transformed")
         print_lock.release()
 
 
@@ -100,6 +98,7 @@ def threaded(conn, addr, max_length_chain):
             # Close clients
             fin = pack('>Q', 0)
             conn.sendall(fin)
+            blockchain_lock.release()
             break
         blockchain_lock.release()
 
@@ -147,18 +146,20 @@ def Main():
         try:
             blockchain_lock.acquire()
             print_lock.acquire()
-            print("Blockchain length (main):" + str(blockChain.length_chain()))
-            print_lock.release()
             if blockChain.length_chain() > args.max_length_chain:
                 print_lock.acquire()
-
                 print('Blockchain completed. Press ctr+c to exit')
                 blockChain.save_chain()
                 print_lock.release()
+                blockchain_lock.acquire()
                 break
             blockchain_lock.release()
+            print_lock.release()
             # establish connection with client
             while len(list_conections) > args.max_connections:
+                print_lock.acquire()
+                print('No more connections allowed')
+                print_lock.release()
                 continue
             c, addr = s.accept()
 
@@ -192,6 +193,8 @@ def Main():
             print(e)
             break
     s.close()
+    blockChain.save_chain()
+    sys.exit(0)
 
 
 if __name__ == '__main__':

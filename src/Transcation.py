@@ -58,7 +58,6 @@ class BlockChain:
     def add_block(self, block):
         # useful for the server on block received
         if self.check_block(block) is True:
-            print("Adding block")
             self.chain.append(block)
             return True
         else:
@@ -83,10 +82,10 @@ class BlockChain:
 
     def check_block(self, block):
         previous_block = self.lookup_block_by_index(block.index - 1)
-        print("Hash (=): " + block.hash[-3:] + " " + block.calculate_hash()[-3:])
-        print("Previous Hash (=): " + block.previous_hash[-3:] + " " + previous_block.hash[-3:])
-        print("Index (>): " + str(block.index) + " " + str(previous_block.index))
-        print("timestamp (>): " + str(block.timestamp) + " " + str(previous_block.timestamp))
+        # print("Hash (=): " + block.hash[-3:] + " " + block.calculate_hash()[-3:])
+        # print("Previous Hash (=): " + block.previous_hash[-3:] + " " + previous_block.hash[-3:])
+        # print("Index (>): " + str(block.index) + " " + str(previous_block.index))
+        # print("timestamp (>): " + str(block.timestamp) + " " + str(previous_block.timestamp))
 
         if (isinstance(block, Block) and previous_block.timestamp < block.timestamp and
                 block.index - previous_block.index == 1 and block.previous_hash == previous_block.hash and
