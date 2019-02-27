@@ -116,6 +116,7 @@ def Main():
     host = ""
     port = 12345
 
+    # Parse program arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--conn", type=int, default=4, dest='max_connections',
                         help="Max number of collections allowed (default 4)")

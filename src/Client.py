@@ -33,6 +33,7 @@ def signal_handler(sig, frame):
 def Main():
     global exit_flag
 
+    # Parse program arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--ip", type=str, default="127.0.0.1", dest='host',
                         help="Server IP (default 127.0.0.1)")

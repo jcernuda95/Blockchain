@@ -52,7 +52,7 @@ class BlockChain:
         }
         # opening with "a" allows to append, something to consider if the chain gets to long.
         with open(path, "w") as file:
-            json.dump(info, file)
+            json.dump(info, file, indent=4)
         return 0
 
     def add_block(self, block):

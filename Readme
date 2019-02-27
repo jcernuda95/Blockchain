@@ -1,0 +1,18 @@
+Requirements
+Only python 3 is required (installed with apt install python3), no external libraries are used and therefore the program doesn’t require more setup.
+The code can be downloaded from GitHub by executing the command https://github.com/jcernuda95/Blockchain.git. All the next instructions will assume that the installation follows that of the GitHub.
+Executing
+There are two different programs, Client.py (for the client) and Server.py (for the server) each of them can be run with the commands, python3 Client.py and python3 Server.py. Both accept a set of parameters. 
+For Client.py, we accept the following flags:
+-i or –ip that is used to define the IP of the server that the client needs to connect to, the default value is localhost for using the client on the same machine as the server.
+For Server.py, we accept:
+-c or –-conn is used to define the maximum number of collections allowed to the server, the default value is 4.
+-d or —difficulty is used to define the difficulty of mining with a default value of 20. The hash of the block must be less than 2^(256-difficulty), so as difficulty increases so does the time to mine.
+ -l or –length used to define the length of the chain before the server stops, the default value is set to 15.
+So, given the previously mention installation directory, and after downloading the code from GitHub, running a server with 4 connections allowed, difficulty 52 (a good number for my computer) and with a maximum length of the chain of 100 blocks is done by:
+cd Blockchain/src
+python3 Server.py -c 4 -d 52 -l 100
+While running a client connected to a server on IP 192.168.0.20 is done by running:
+Python3 Client.py -i 192.168.0.20
+
+The code was tested on Ubuntu LTS 18.04.01
